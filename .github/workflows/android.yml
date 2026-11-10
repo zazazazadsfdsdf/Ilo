@@ -17,6 +17,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
+      - name: Apply reviewed game refactor
+        run: |
+          mkdir -p /tmp/ashen-refactor
+          unzip -o ASHEN-LEGACY-refactor-v2.zip -d /tmp/ashen-refactor
+          cp -R /tmp/ashen-refactor/Ilo/app/. app/
       - name: Build debug APK
         run: gradle --no-daemon assembleDebug
       - uses: actions/upload-artifact@v4
