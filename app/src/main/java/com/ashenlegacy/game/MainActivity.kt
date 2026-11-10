@@ -1,6 +1,7 @@
 package com.ashenlegacy.game
 
 import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -15,7 +16,7 @@ class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-        setContentView(GameView())
+        setContentView(GameView(this))
     }
 }
 
@@ -23,7 +24,7 @@ private data class Mob(var x:Float,var y:Float,var hp:Float=2f,var speed:Float=4
 private data class Orb(var x:Float,var y:Float)
 private data class Shot(var x:Float,var y:Float,var vx:Float,var vy:Float)
 
-private class GameView : View() {
+private class GameView(context: Context) : View(context) {
     private val p=Paint(Paint.ANTI_ALIAS_FLAG)
     private val mobs=mutableListOf<Mob>(); private val orbs=mutableListOf<Orb>(); private val shots=mutableListOf<Shot>()
     private var px=500f; private var py=350f; private var hp=100f; private var xp=0; private var level=1; private var kills=0
@@ -39,7 +40,6 @@ private class GameView : View() {
         for(y in 0..(h/48).toInt()) c.drawLine(0f,y*48f,w,y*48f,p)
         val now=System.nanoTime(); val dt=min(.04f,(now-last)/1e9f).toFloat(); last=now
         if(!dead&&!paused&&!upgrade) update(dt,w,h)
-        // ember-lit hero
         p.color=Color.rgb(235,170,92); c.drawCircle(px,py,18f,p)
         p.color=Color.rgb(255,225,170); c.drawCircle(px,py,7f,p)
         for(m in mobs){p.color=Color.rgb(130,54,62);c.drawCircle(m.x,m.y,15f,p);p.color=Color.rgb(245,130,90);c.drawCircle(m.x-4,m.y-3,3f,p)}
